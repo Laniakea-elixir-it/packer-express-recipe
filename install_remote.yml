@@ -1,0 +1,19 @@
+---
+
+- hosts: default
+  become: yes
+  pre_tasks:
+    - name: install py3 and epel
+      yum:
+        name:
+          - python3
+          - epel-release
+        state: present
+    - name: install py2-pip
+      yum:
+        name: python-pip
+        state: present
+    - name: Gathering Facts
+      setup:
+  roles:
+    - role: ansible-role-laniakea-galaxy

@@ -15,9 +15,9 @@
 			"flavor": "<flavor-id>",
 			"ssh_ip_version": "4",
 			"use_blockstorage_volume": "true",
-			"volume_size": "10",
+			"volume_size": "100",
 			"volume_availability_zone": "nova",
-			"image_disk_format": "qcow2",
+			"image_disk_format": "raw",
 			"networks": [
 				"<network-id>"
 			]

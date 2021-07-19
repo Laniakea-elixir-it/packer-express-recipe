@@ -1,0 +1,107 @@
+pip_virtualenv_command: /usr/bin/python3 -m virtualenv
+#postgresql
+
+postgresql_objects_users:
+  - name: galaxy
+
+postgresql_objects_databases:
+  - name: galaxy
+  - name: galaxy_tools
+
+galaxy_create_user: true
+galaxy_force_checkout: true
+galaxy_separate_privileges: yes
+galaxy_manage_paths: true
+galaxy_layout: root-dir
+galaxy_privsep_user: galaxy
+galaxy_user: {name: galaxy, shell: /bin/bash }
+galaxy_group: galaxy
+galaxy_root: /home/galaxy/galaxy
+galaxy_server_dir: '{{ galaxy_root }}/server' 
+galaxy_mutable_config_dir: '{{ galaxy_root }}/config' 
+galaxy_config_file: '{{ galaxy_mutable_config_dir }}/galaxy.yml' 
+galaxy_commit_id: release_20.05
+galaxy_config_style: yaml
+galaxy_config:
+  galaxy:
+    brand: "EXPRESS-TEST"
+    admin_users: "admin@server.com"
+    database_connection: "postgresql:///galaxy?host=/var/run/postgresql"
+    install_database_connection: "postgresql:///galaxy_tools?host=/var/run/postgresql"
+    ##job_working_directory: '{{ database_path }}/job_working_directory'
+    file_path: /data
+   ## new_file_path: '{{ database_path }}/tmp'
+    check_migrate_tools: false
+   ## tool_data_path: "{{ galaxy_mutable_data_dir }}/tool-data"
+   ## tool_dependency_dir: "{{ tool_deps_path }}"
+   ## template_cache_path: '{{ database_path }}/compiled_templates'
+   ## citation_cache_data_dir: '{{ database_path }}/citations/data'
+   ## citation_cache_lock_dir: '{{ database_path }}/citations/lock'
+   ## whoosh_index_dir: '{{ database_path }}/whoosh_indexes'
+   ## object_store_cache_path: '{{ database_path }}/object_store_cache'
+   ## cluster_file_directory: '{{ database_path }}/pbs'
+   ## nginx_upload_store: '{{ database_path }}/tmp/nginx_upload_store'
+##    nginx_upload_path: "/_upload"
+##    require_login: "True"
+    allow_user_creation: "True"
+    allow_user_impersonation: "True"
+    new_user_dataset_access_role_default_private: "True"
+##    ftp_upload_dir: '{{ database_path }}/ftp'
+##    ftp_upload_site: ftp://localhost
+##    conda_prefix: '{{ laniakea_conda_prefix }}'
+    conda_auto_install: true
+##    job_config_file: '{{ laniakea_galaxy_config_dir }}/job_conf.xml'
+    #add test-toolshed
+##    tool_sheds_config_file: '{{ laniakea_galaxy_config_dir }}/tool_sheds_conf.xml'
+    #release_20.05 variables
+##    tool_search_index_dir: '{{ database_path }}/tool_search_index_dir'
+##    tool_cache_data_dir: '{{ database_path }}/tool_cache'
+
+  uwsgi:
+    socket: 127.0.0.1:4001
+    buffer-size: 16384
+    processes: 1
+    threads: 4
+    offload-threads: 2
+    static-map:
+    ##  - /static/style={{ galaxy_server_dir }}/static/style
+      - /static={{ galaxy_server_dir }}/static
+      - /favicon.ico={{ galaxy_server_dir }}/static/favicon.ico
+    static-safe: client/galaxy/images
+    master: true
+    virtualenv: "{{ galaxy_venv_dir }}"
+    pythonpath: "{{ galaxy_server_dir }}/lib"
+    module: galaxy.webapps.galaxy.buildapp:uwsgi_app()
+    manage-script-name: true
+    thunder-lock: true
+    die-on-term: true
+    hook-master-start:
+      - unix_signal:2 gracefully_kill_them_all
+      - unix_signal:15 gracefully_kill_them_all
+    py-call-osafterfork: true
+    enable-threads: true
+    stats: 127.0.0.1:4010
+    #change log from tmp to var/log/galaxy
+    #logto: "/var/log/galaxy/uwsgi.log"
+    no-orphans: true
+    mule:
+      - lib/galaxy/main.py
+      - lib/galaxy/main.py
+    farm: job-handlers:1,2
+#systemd
+galaxy_manage_systemd: yes
+## nginx
+nginx_selinux_allow_local_connections: true
+nginx_flavor: galaxy
+nginx_servers:
+  - galaxy
+nginx_enable_default_server: false
+nginx_conf_http:
+        # server_tokens: off
+  client_max_body_size: 1g
+nginx_conf_user: galaxy
+nginx_conf_group: galaxy
+enable_galaxy_ie: true
+database_path: '{{ galaxy_root }}/tool_deps/database'
+#miniconda
+miniconda_prefix: '{{ galaxy_root }}/tool_deps/_conda'

@@ -26,9 +26,7 @@
 	"provisioners": [
 		{
 			"type": "ansible",
-			"extra_arguments": [
-				"--extra-vars",
-				"ansible_python_interpreter=/usr/bin/python2","--extra-vars","@./group_vars/galaxyservers.yml"],
+			"extra_arguments": ["--extra-vars","@./group_vars/galaxyservers.yml"],
 				"inventory_directory": "./",
 			"playbook_file": "./playbook.yml"
 

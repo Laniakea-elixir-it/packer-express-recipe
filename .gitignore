@@ -1,3 +1,5 @@
 hosts
 packer_ga_recipe_fill.json
 playbook_by_hand.yml
+packer-provisioner-*
+nohup.out

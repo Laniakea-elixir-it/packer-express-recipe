@@ -33,7 +33,7 @@
         timeout: 300
     - name: lock-file absent 
       file:
-        path: /home/galaxy/galaxy/var/dependencies/conda.lock 
+        path: /export/tool_deps/conda.lock 
         state: absent
     - name: stop galaxy
       systemd:

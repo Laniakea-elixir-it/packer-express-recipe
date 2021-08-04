@@ -1,4 +1,4 @@
-pip_virtualenv_command: /usr/bin/python3 -m virtualenv
+galaxy_virtualenv_command: /usr/bin/python3 -m virtualenv
 #postgresql
 
 postgresql_objects_users:
@@ -32,7 +32,7 @@ galaxy_config:
     allow_user_creation: "True"
     allow_user_impersonation: "True"
     new_user_dataset_access_role_default_private: "True"
-    conda_auto_install: true
+    #conda_auto_install: true
     ##
     file_path: /export
     tool_dependency_dir: /export/tool_deps

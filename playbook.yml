@@ -7,6 +7,8 @@
     - name: '[EL] Install Galaxy Dependencies'
       package:
         name: ['git', 'make', 'python-psycopg2', 'libselinux-python', 'bzip2', 'python3','epel-release']
+    - name: '[EL] update ca-certificates'
+      command: 'yum update -y ca-certificates'
     - name: '[EL] Add NGINX repository'
       command: 'yum-config-manager --add-repo https://depot.galaxyproject.org/yum/galaxy.repo'
     - name: '[EL] Install virtualenv for python3'
